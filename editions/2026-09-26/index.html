@@ -11,8 +11,8 @@
   A build script will later inject real rows from a Supabase table.
 
   INJECTION CONTRACT (keep these markers intact):
-    <!-- DAY-START --> … <!-- DAY-END -->     repeat once per day
-    <!-- PICK-START --> … <!-- PICK-END -->   repeat once per pick inside a day
+    DAY-START … DAY-END       repeat once per day
+    PICK-START … PICK-END     repeat once per pick inside a day
   Each .day carries data-day="sat|sun|…" and each .pick carries data-pick.
   Field hooks: .pick-title, .pick-meta, .pick-syn, .pick-fit, .pick-link a,
   .pick-photo img.
