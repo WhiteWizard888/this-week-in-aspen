@@ -69,6 +69,9 @@
 
   /* ---------- masthead ---------- */
   .masthead{ text-align: center; margin-bottom: 2.75rem; }
+  nav.site-nav{ display: flex; gap: 1.4rem; justify-content: center; margin: 0 0 1.8rem;
+                font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+  nav.site-nav a{ color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--brass); }
   .kicker{
     font-size: .68rem;
     font-weight: 600;
@@ -324,6 +327,11 @@
 
   <!-- ══════════════ MASTHEAD ══════════════ -->
   <header class="masthead">
+    <nav class="site-nav screen-only">
+      <a href="../../index.html">This Week</a>
+      <a href="../../editions/">Archive</a>
+      <a href="../../sources/">How we verify</a>
+    </nav>
     <p class="kicker">For our arriving members &amp; guests</p>
     <h1 class="brand">This Week in Aspen</h1>
     <hr class="rule-double">
