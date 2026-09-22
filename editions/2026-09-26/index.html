@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>This Week in Aspen</title>
+<!--
+  AURELIAN — THIS WEEK IN ASPEN · design / typography template (v1)
+  ----------------------------------------------------------------
+  SAMPLE DATA throughout — placeholder content for design review only.
+  A build script will later inject real rows from a Supabase table.
+
+  INJECTION CONTRACT (keep these markers intact):
+    <!-- DAY-START --> … <!-- DAY-END -->     repeat once per day
+    <!-- PICK-START --> … <!-- PICK-END -->   repeat once per pick inside a day
+  Each .day carries data-day="sat|sun|…" and each .pick carries data-pick.
+  Field hooks: .pick-title, .pick-meta, .pick-syn, .pick-fit, .pick-link a,
+  .pick-photo img.
+  Image hook: <figure class="pick-photo"><img src="…" alt="…"></figure> sits
+  directly above .pick-title inside a .pick. If a row has no image, the whole
+  <figure> element is omitted — no empty hooks, no placeholder boxes.
+
+  No build step, no JavaScript. Google Fonts with system fallbacks —
+  the page must survive printing offline.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:    #1d1a16;
+    --muted:  #6e675c;
+    --faint:  #a39a8b;
+    --paper:  #fdfcf8;
+    --hair:   #e4ded1;
+    --brass:  #8f7134;
+    --serif:  "Cormorant Garamond", "Didot", "Bodoni MT", Didot, Georgia, "Times New Roman", serif;
+    --sans:   "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html{ -webkit-text-size-adjust: 100%; }
+  body{
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page{
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 3rem;
+  }
+
+  /* ---------- sample banner (prints: this is placeholder content) ---------- */
+  .sample-bar{
+    border: 1px solid var(--brass);
+    color: var(--brass);
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: .55rem .75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{ text-align: center; margin-bottom: 2.75rem; }
+  .kicker{
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 1rem;
+  }
+  .brand{
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(3.2rem, 14vw, 5.2rem);
+    letter-spacing: .14em;
+    line-height: 1;
+    margin: 0 0 .35rem;
+    text-indent: .14em; /* optically recenter tracked caps */
+  }
+  .tagline{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.25rem, 5vw, 1.6rem);
+    color: var(--muted);
+    margin: 0;
+  }
+  .rule-double{
+    border: 0;
+    border-top: 1px solid var(--ink);
+    position: relative;
+    margin: 1.6rem auto;
+    max-width: 100%;
+  }
+  .rule-double::after{
+    content: "";
+    display: block;
+    border-top: 1px solid var(--ink);
+    margin-top: 3px;
+  }
+  .edition{
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    margin: 0 0 .9rem;
+  }
+  .edition .vol{ color: var(--faint); font-weight: 500; }
+  .editors-note{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.12rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 34rem;
+    margin: 0 auto;
+  }
+
+  /* ---------- day sections ---------- */
+  .day{ margin: 0 0 2.5rem; }
+  .day-head{
+    display: flex;
+    align-items: baseline;
+    gap: .9rem;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: .45rem;
+    margin: 0 0 1.4rem;
+  }
+  .day-name{
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+  }
+  .day-date{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--muted);
+  }
+  .day-quiet{
+    color: var(--faint);
+    font-size: .92rem;
+    font-style: italic;
+    margin: 0 0 1rem;
+  }
+
+  /* ---------- pick cards (the repeating block) ---------- */
+  .pick{
+    margin: 0 0 1.9rem;
+    padding-bottom: 1.9rem;
+    border-bottom: 1px solid var(--hair);
+  }
+  .pick:last-child{ border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+  .pick-title{
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin: 0 0 .35rem;
+  }
+  .pick-meta{
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    margin: 0 0 .7rem;
+  }
+  .pick-meta .flag{
+    display: inline-block;
+    border: 1px solid var(--brass);
+    color: var(--brass);
+    font-size: .66rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    padding: .1em .55em .15em;
+    margin-left: .6em;
+    vertical-align: .12em;
+    white-space: nowrap;
+  }
+  .pick-syn{ margin: 0 0 .55rem; }
+  .pick-fit{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.06rem;
+    color: var(--muted);
+    margin: 0 0 .7rem;
+  }
+  .pick-link{
+    font-size: .85rem;
+    margin: 0;
+  }
+  .pick-link .label{
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-size: .72rem;
+    color: var(--muted);
+  }
+  .pick-link a{
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--brass);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  /* ---------- pick photo (optional; omitted entirely when absent) ---------- */
+  .pick-photo{
+    margin: 0 0 1.1rem;
+    break-inside: avoid;
+  }
+  .pick-photo img{
+    display: block;
+    width: 100%;
+    max-height: 15rem;
+    object-fit: cover;
+    border: 1px solid var(--hair);
+  }
+
+  /* ---------- closing note ---------- */
+  .closing{
+    border-top: 1px solid var(--ink);
+    margin-top: 2.5rem;
+    padding-top: 1.4rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.08rem;
+    color: var(--muted);
+  }
+
+  /* ---------- footer ---------- */
+  .colophon{
+    margin-top: 2.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--hair);
+    font-size: .78rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .colophon .concierge{ font-weight: 600; color: var(--ink); }
+  .colophon p{ margin: 0 0 .3rem; }
+
+  /* ---------- screen-only helper ---------- */
+  .screen-only{ display: block; }
+  .print-hint{
+    text-align: center;
+    font-size: .75rem;
+    color: var(--faint);
+    margin: 0 0 2rem;
+    letter-spacing: .04em;
+  }
+
+  /* ---------- wider screens: a touch more air ---------- */
+  @media (min-width: 640px){
+    .page{ padding: 3.5rem 2rem 4rem; }
+    .pick-title{ font-size: 1.7rem; }
+  }
+
+  /* ================================================================
+     PRINT — the printed page IS the newsletter.
+     ================================================================ */
+  @page{
+    size: letter;
+    margin: 17mm 15mm 18mm;
+  }
+  @media print{
+    :root{ --paper: #ffffff; }
+    body{
+      background: #fff;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page{ max-width: none; padding: 0; margin: 0; }
+    .screen-only{ display: none !important; }
+
+    .masthead{ margin-bottom: 22pt; }
+    .brand{ font-size: 44pt; }
+    .tagline{ font-size: 15pt; }
+    .sample-bar{ margin-bottom: 18pt; font-size: 7.5pt; }
+
+    .day{ margin-bottom: 18pt; }
+    .day-head{ break-after: avoid; }
+    .pick{
+      break-inside: avoid;
+      margin-bottom: 14pt;
+      padding-bottom: 14pt;
+    }
+    .pick-title{ font-size: 15pt; }
+    .pick-meta{ font-size: 8.5pt; }
+    .pick-fit{ font-size: 11pt; }
+    .pick-photo{ margin-bottom: 10pt; }
+    .pick-photo img{ max-height: 2.6in; }
+
+    a{ color: inherit; text-decoration: none; }
+    /* printed handout: the URL itself is the useful part */
+    .pick-link a::after{
+      content: " — " attr(href);
+      font-size: 8pt;
+      color: #555;
+      word-break: break-all;
+    }
+
+    .closing{ margin-top: 18pt; padding-top: 12pt; font-size: 11pt; }
+    .colophon{ margin-top: 20pt; font-size: 8pt; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <p class="print-hint screen-only">On-screen preview — this page prints as the newsletter (⌘P / Print).</p>
+
+  <!-- ══════════════ MASTHEAD ══════════════ -->
+  <header class="masthead">
+    <p class="kicker">For our arriving members &amp; guests</p>
+    <h1 class="brand">This Week in Aspen</h1>
+    <hr class="rule-double">
+    <p class="edition">Saturday, September 26 – Saturday, October 3, 2026</p>
+    <p class="editors-note">Music, art, and high-country happenings — a handful of picks chosen for the days you&#x27;re here.</p>
+  </header>
+
+  <main>
+    <!-- DAY-START -->
+    <section class="day" data-day="sat">
+      <h2 class="day-head"><span class="day-name">Saturday</span> <span class="day-date">September 26</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/snowmass-balloon-festival-hot-air-balloons.jpg" alt="Snowmass Balloon Festival — Morning Launch at Snowmass Town Park, Snowmass Village"></figure>
+        <h3 class="pick-title">Snowmass Balloon Festival — Morning Launch</h3>
+        <p class="pick-meta"><strong>Saturday, September 26 · 7:00 AM – 9:00 AM · Snowmass Town Park, Snowmass Village · Free · All ages</strong></p>
+        <p class="pick-syn">Thirty-plus balloons lift off over the Elk Mountains at sunrise for the festival&#x27;s 51st year. Mornings are cold at this altitude — layers, closed-toe shoes, and a blanket or chairs; dogs aren&#x27;t allowed on the field.</p>
+        <p class="pick-fit"><em>The single most photogenic morning of the week; worth the early alarm.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.gosnowmass.com/event/snowmass-balloon-festival/2026-09-25/">gosnowmass.com</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/aspen-saturday-market.jpg" alt="Aspen Saturday Market at Downtown Aspen (Galena &amp; Hopkins)"></figure>
+        <h3 class="pick-title">Aspen Saturday Market</h3>
+        <p class="pick-meta"><strong>Saturday, September 26 · 9:00 AM – 2:00 PM · Downtown Aspen (Galena &amp; Hopkins) · Free · All ages</strong></p>
+        <p class="pick-syn">The town&#x27;s weekly market runs 9 to 2 with Colorado-grown produce, local meats, and artisan goods — strictly Colorado-made, no brokers. Arrive before 10 for the easiest browsing and the shortest coffee line.</p>
+        <p class="pick-fit"><em>A gentle first morning — daylight, low-barrier, and an easy taste of the town.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.aspen.gov/180/Aspen-Saturday-Market">aspen.gov</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/snowmass-oktoberfest.webp" alt="Snowmass Oktoberfest at Snowmass Base Village"></figure>
+        <h3 class="pick-title">Snowmass Oktoberfest</h3>
+        <p class="pick-meta"><strong>Saturday, September 26 · 12:00 PM – 8:00 PM · Snowmass Base Village · Free entry; food &amp; drink for purchase · All ages (21+ to drink)</strong></p>
+        <p class="pick-syn">Snowmass caps its summer season with steins, pretzels, a sausage-eating contest, stein-holding, live music, and the return of Manuela, the Oktoberfest Queen. Lederhosen encouraged; the festival itself is open to all ages.</p>
+        <p class="pick-fit"><em>An easy, festive afternoon after the morning balloons — no tickets needed.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.gosnowmass.com/event/snowmass-oktoberfest/">gosnowmass.com</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/hiss-golden-messenger-band.webp" alt="Hiss Golden Messenger at Belly Up at Belly Up Aspen, 450 S Galena St"></figure>
+        <h3 class="pick-title">Hiss Golden Messenger at Belly Up</h3>
+        <p class="pick-meta"><strong>Saturday, September 26 · 8:00 PM · Belly Up Aspen, 450 S Galena St · From $38.40 · All ages (&lt;18 with parent/guardian)</strong></p>
+        <p class="pick-syn">M.C. Taylor brings his literate, gospel-tinged Americana to Aspen&#x27;s intimate 450-cap room, with Lou Hazel opening on the I&#x27;m People Tour. Doors 7 PM, show 8 PM. All ages (under 18 with a parent or guardian).</p>
+        <p class="pick-fit"><em>For the music-first guest — one of the fall&#x27;s finest songwriters in the valley&#x27;s best listening room.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://tickets.bellyupaspen.com/link/event?event=hiss-golden-messenger-9-26-26">tickets.bellyupaspen.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="sun">
+      <h2 class="day-head"><span class="day-name">Sunday</span> <span class="day-date">September 27</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/snowmass-balloon-festival-hot-air-balloons.jpg" alt="Snowmass Balloon Festival — Final Launch at Snowmass Town Park, Snowmass Village"></figure>
+        <h3 class="pick-title">Snowmass Balloon Festival — Final Launch</h3>
+        <p class="pick-meta"><strong>Sunday, September 27 · 7:00 AM – 9:00 AM · Snowmass Town Park, Snowmass Village · Free · All ages</strong></p>
+        <p class="pick-syn">The last morning of the festival&#x27;s 51st year — the final mass ascension over Snowmass Town Park. Same drill: layers, blankets, arrive early; balloons go up weather permitting.</p>
+        <p class="pick-fit"><em>Your second chance if Saturday&#x27;s weather didn&#x27;t cooperate.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.gosnowmass.com/event/snowmass-balloon-festival/2026-09-25/">gosnowmass.com</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/wheeler-opera-house-aspen.webp" alt="Aspen Literary Festival — Closing Day at Downtown Aspen (Wheeler Opera House, Library, Community Church)"></figure>
+        <h3 class="pick-title">Aspen Literary Festival — Closing Day</h3>
+        <p class="pick-meta"><strong>Sunday, September 27 · 10:00 AM · Downtown Aspen (Wheeler Opera House, Library, Community Church) · Free GA; Wheeler main stage $45 · All ages</strong></p>
+        <p class="pick-syn">The festival&#x27;s second year closes with a full day of author conversations, panels, and signings across downtown — Jennette McCurdy, Richard Russo, Veronica Roth, and more on the lineup. Most events are free with registration; marquee Wheeler main-stage sessions are ticketed.</p>
+        <p class="pick-fit"><em>For readers — the cultural high point of the weekend, and mostly free.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.aspenliteraryfestival.org/how-to-attend">aspenliteraryfestival.org</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/aspen-colorado-restaurant-fine-dining.jpg" alt="Aspen Restaurant Week Autumn — Final Evening at Participating restaurants, Aspen"></figure>
+        <h3 class="pick-title">Aspen Restaurant Week Autumn — Final Evening</h3>
+        <p class="pick-meta"><strong>Sunday, September 27 · 5:00 PM · Participating restaurants, Aspen · Prix fixe (varies by restaurant) · All ages</strong></p>
+        <p class="pick-syn">The last evening of the autumn edition — prix fixe, multi-course fall-harvest menus at 25+ local restaurants, from Matsuhisa to Wild Fig. Reserve ahead; menus and the full restaurant list are at the Chamber.</p>
+        <p class="pick-fit"><em>The week&#x27;s best-value fine dining — book the table tonight, it ends Sunday.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://aspenchamber.org/restaurants-nightlife/restaurant-week/">aspenchamber.org</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/bombargo-band.webp" alt="Bombargo at Belly Up at Belly Up Aspen, 450 S Galena St"></figure>
+        <h3 class="pick-title">Bombargo at Belly Up</h3>
+        <p class="pick-meta"><strong>Sunday, September 27 · 8:00 PM · Belly Up Aspen, 450 S Galena St · From $12.00 · All ages (&lt;18 with parent/guardian)</strong></p>
+        <p class="pick-syn">Saskatoon-bred Bombargo bring their big-chorus pop-rock to the Belly Up room, with Graham Good &amp; The Painters opening. Doors 7 PM, show 8 PM. All ages (under 18 with a parent or guardian).</p>
+        <p class="pick-fit"><em>A high-energy night out for the group that wants to dance.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://tickets.bellyupaspen.com/link/event?event=bombargo-9-27-26">tickets.bellyupaspen.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="mon">
+      <h2 class="day-head"><span class="day-name">Monday</span> <span class="day-date">September 28</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/maroon-bells-autumn-fall-colors.jpg" alt="Maroon Bells at Peak Color at Maroon Bells Scenic Area (shuttle from Aspen Highlands)"></figure>
+        <h3 class="pick-title">Maroon Bells at Peak Color</h3>
+        <p class="pick-meta"><strong>Monday, September 28 · 8:00 AM · Maroon Bells Scenic Area (shuttle from Aspen Highlands) · Shuttle $16/adult · All ages</strong></p>
+        <p class="pick-syn">Late September is the peak window for the gold — the most photographed peaks in North America at their most golden. Between 8am and 5pm all visitors must use the shuttle from Aspen Highlands; reserve ahead, it sells out in color season.</p>
+        <p class="pick-fit"><em>The can&#x27;t-miss of the week for anyone who hasn&#x27;t seen the Bells in fall.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.visitmaroonbells.com/">visitmaroonbells.com</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/aspen-art-museum-building.webp" alt="Aspen Art Museum — Fall Exhibitions at Aspen Art Museum, 637 E Hyman Ave"></figure>
+        <h3 class="pick-title">Aspen Art Museum — Fall Exhibitions</h3>
+        <p class="pick-meta"><strong>Monday, September 28 · 10:00 AM · Aspen Art Museum, 637 E Hyman Ave · Free · All ages</strong></p>
+        <p class="pick-syn">Free, always. This fall: Adrián Villar Rojas&#x27;s monumental &#x27;First Gods, Lost Animals,&#x27; Arch Connelly&#x27;s &#x27;Straighten Your Wig and Pray&#x27; (through Oct 11), and Anthea Hamilton&#x27;s &#x27;Cauliflower Sundial&#x27; — plus the rooftop for the view.</p>
+        <p class="pick-fit"><em>A quiet, contemplative morning — and the rooftop view is worth the trip alone.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://aspenartmuseum.org/">aspenartmuseum.org</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="tue">
+      <h2 class="day-head"><span class="day-name">Tuesday</span> <span class="day-date">September 29</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/aspen-isis-theatre.jpg" alt="Aspen Filmfest — Opening Day (47th) at Isis Theatre, 406 E Hopkins Ave"></figure>
+        <h3 class="pick-title">Aspen Filmfest — Opening Day (47th)</h3>
+        <p class="pick-meta"><strong>Tuesday, September 29 · 5:00 PM · Isis Theatre, 406 E Hopkins Ave · All ages</strong></p>
+        <p class="pick-syn">Six days of international and independent film — features and docs from Cannes, Sundance, Telluride, and Venice — opens at the Isis. Tickets on sale now; the full program is at aspenfilm.org.</p>
+        <p class="pick-fit"><em>The week&#x27;s best indoor evening — festival energy without the ski-season crowds.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://aspenfilm.org/events-archive/">aspenfilm.org</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/michigander-band.jpg" alt="Michigander at Belly Up at Belly Up Aspen, 450 S Galena St"></figure>
+        <h3 class="pick-title">Michigander at Belly Up</h3>
+        <p class="pick-meta"><strong>Tuesday, September 29 · 8:00 PM · Belly Up Aspen, 450 S Galena St · From $45.60 · All ages (&lt;18 with parent/guardian)</strong></p>
+        <p class="pick-syn">Jason Singer&#x27;s Michigander brings earnest, heartland indie-rock to the Belly Up stage, with Jake Lemond opening. Doors 7 PM, show 8 PM. All ages (under 18 with a parent or guardian).</p>
+        <p class="pick-fit"><em>For the indie-rock fan — intimate room, big choruses.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://tickets.bellyupaspen.com/link/event?event=michigander-9-29-26">tickets.bellyupaspen.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="wed">
+      <h2 class="day-head"><span class="day-name">Wednesday</span> <span class="day-date">September 30</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/john-denver-guitar.jpg" alt="John Denver Celebration — Opening Day at Various venues, Aspen &amp; Snowmass"></figure>
+        <h3 class="pick-title">John Denver Celebration — Opening Day</h3>
+        <p class="pick-meta"><strong>Wednesday, September 30 · 10:00 AM · Various venues, Aspen &amp; Snowmass · Varies by event · All ages</strong></p>
+        <p class="pick-syn">The annual tribute week opens — concerts of Denver&#x27;s songbook at the Wheeler and the Snowmass Chapel, plus nightly sing-alongs of &#x27;Rocky Mountain High&#x27; and &#x27;Country Roads.&#x27; Each event is run by its own organizer; the full schedule is on the celebration site.</p>
+        <p class="pick-fit"><em>Peak fall color meets the valley&#x27;s most heartfelt tradition — made for the sing-along crowd.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.johndenvercelebration.com/">johndenvercelebration.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="thu">
+      <h2 class="day-head"><span class="day-name">Thursday</span> <span class="day-date">October 1</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/tom-rush-folk-singer.jpg" alt="An Evening with Tom Rush (Wheeler Opera House) at Wheeler Opera House, 320 E Hyman Ave"></figure>
+        <h3 class="pick-title">An Evening with Tom Rush (Wheeler Opera House)</h3>
+        <p class="pick-meta"><strong>Thursday, October 1 · 7:00 PM · Wheeler Opera House, 320 E Hyman Ave · All ages</strong></p>
+        <p class="pick-syn">A foundational figure of the &#x27;60s folk revival, with his distinctive guitar work and songs by Joni Mitchell, James Taylor, and Jackson Browne in his repertoire. An intimate acoustic evening in the 1889 opera house — the room is half the experience.</p>
+        <p class="pick-fit"><em>For the folk traditionalist — a master in the perfect room.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://aspenshowtix.com/events/month/?shortcode=6cad6ea5">aspenshowtix.com</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/pink-talking-fish-band.png" alt="Pink Talking Fish at Belly Up at Belly Up Aspen, 450 S Galena St"></figure>
+        <h3 class="pick-title">Pink Talking Fish at Belly Up</h3>
+        <p class="pick-meta"><strong>Thursday, October 1 · 9:00 PM · Belly Up Aspen, 450 S Galena St · From $33.60</strong><span class="flag">21+</span></p>
+        <p class="pick-syn">A high-wire hybrid tribute — Pink Floyd, Talking Heads, and Phish fused into one late-night set. Doors 8 PM, show 9 PM. 21+, valid photo ID required.</p>
+        <p class="pick-fit"><em>The late-night counterprogramming to the Wheeler&#x27;s folk evening.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://tickets.bellyupaspen.com/link/event?event=pink-talking-fish-10-1-26">tickets.bellyupaspen.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="fri">
+      <h2 class="day-head"><span class="day-name">Friday</span> <span class="day-date">October 2</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/aspen-isis-theatre.jpg" alt="Aspen Filmfest — Closing Weekend at Isis Theatre, 406 E Hopkins Ave"></figure>
+        <h3 class="pick-title">Aspen Filmfest — Closing Weekend</h3>
+        <p class="pick-meta"><strong>Friday, October 2 · 12:00 PM · Isis Theatre, 406 E Hopkins Ave · All ages</strong></p>
+        <p class="pick-syn">The festival heads into its closing weekend — catch the features and docs you missed earlier in the week, before the Sunday encores in Carbondale.</p>
+        <p class="pick-fit"><em>A second bite at the week&#x27;s biggest arts event.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://aspenfilm.org/events-archive/">aspenfilm.org</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/wheeler-opera-house-aspen-2.webp" alt="Mack Bailey &amp; Chris Nole: The Songs of John Denver (Wheeler) at Wheeler Opera House, 320 E Hyman Ave"></figure>
+        <h3 class="pick-title">Mack Bailey &amp; Chris Nole: The Songs of John Denver (Wheeler)</h3>
+        <p class="pick-meta"><strong>Friday, October 2 · 7:30 PM · Wheeler Opera House, 320 E Hyman Ave · All ages</strong></p>
+        <p class="pick-syn">&#x27;Poems, Prayers &amp; Promises&#x27; — an intimate concert of John Denver&#x27;s songbook, part of the week&#x27;s Celebration. Warmth, honesty, and the songs the whole valley knows by heart.</p>
+        <p class="pick-fit"><em>The Celebration&#x27;s centerpiece concert — book ahead.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://aspenshowtix.com/events/month/?shortcode=6cad6ea5">aspenshowtix.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="sat2">
+      <h2 class="day-head"><span class="day-name">Saturday</span> <span class="day-date">October 3 · Departure Day</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/aspen-saturday-market.jpg" alt="Aspen Saturday Market — Season Finale at Downtown Aspen (Galena &amp; Hopkins)"></figure>
+        <h3 class="pick-title">Aspen Saturday Market — Season Finale</h3>
+        <p class="pick-meta"><strong>Saturday, October 3 · 9:00 AM – 2:00 PM · Downtown Aspen (Galena &amp; Hopkins) · Free · All ages</strong></p>
+        <p class="pick-syn">The last market of the 2026 season — fall produce, apple cider, pumpkins, and the final roundup of Colorado artisans. Arrive early; the send-off crowds come out for this one.</p>
+        <p class="pick-fit"><em>Bookend the week where it started — one last stroll before checkout.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.aspen.gov/180/Aspen-Saturday-Market">aspen.gov</a></p>
+      </article>
+      <!-- PICK-END -->
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="../../assets/editions/2026-09-26/carbondale-colorado-main-street.jpg" alt="Carbondale Potato Day at Main Street &amp; Sopris Park, Carbondale"></figure>
+        <h3 class="pick-title">Carbondale Potato Day</h3>
+        <p class="pick-meta"><strong>Saturday, October 3 · 10:30 AM – 3:00 PM · Main Street &amp; Sopris Park, Carbondale · Free (food for purchase) · All ages</strong></p>
+        <p class="pick-syn">Carbondale&#x27;s harvest tradition since 1909 — parade down Main Street, community BBQ, farm market, and kids&#x27; activities in Sopris Park, 30 minutes down-valley. The pancake breakfast starts at 8 if you&#x27;re early.</p>
+        <p class="pick-fit"><em>Small-town Colorado at its most charming — an easy morning drive before departure.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.findglocal.com/US/Carbondale/437033059704130/Carbondale-Annual-Potato-Day">findglocal.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+  </main>
+
+  <p class="closing">If you'd like these narrowed to your interests — music, art, the outdoors — just let me know, and I'll tailor the week to you.</p>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="colophon">
+    <p class="concierge">Your concierge — Ron Delhaye, Jr. · (970) 925-0000 · Ron.Delhaye@RitzCarlton.com</p>
+    <p>Every event verified against official sources before publication. Details may change — please confirm with the venue.</p>
+    <p>© 2026 · Prepared for the exclusive use of our arriving members and guests.</p>
+  </footer>
+
+</div>
+</body>
+</html>
