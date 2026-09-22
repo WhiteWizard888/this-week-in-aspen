@@ -4,6 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<link rel="manifest" href="/this-week-in-aspen/manifest.json">
+<meta name="theme-color" content="#0a1628">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Golden Hour">
+<link rel="apple-touch-icon" href="/this-week-in-aspen/icons/apple-touch-icon.png">
+<script>
+if ("serviceWorker" in navigator) {{
+  window.addEventListener("load", function () {{
+    navigator.serviceWorker.register("/this-week-in-aspen/sw.js", {{ scope: "/this-week-in-aspen/" }});
+  }});
+}
+</script>
 <title>How we verify — The Golden Hour</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,6 +79,7 @@
   .colophon{margin-top:3.5rem;padding-top:1.5rem;border-top:1px solid var(--hair);
              font-size:.8rem;color:var(--muted);text-align:center}
   .colophon .concierge{color:var(--ink)}
+  .colophon .foot-links a{color:var(--ink);text-decoration-color:var(--accent);text-underline-offset:2px}
   @media print{ nav.site-nav, .btn {display:none} }
 </style>
 </head>
@@ -79,8 +94,8 @@
     <p class="tagline">A weekly field guide to what's on — music, art, and high-country happenings, verified before publication.</p>
   <nav class="site-nav">
     <a href="../index.html">Latest</a>
-    <a href="../editions/">Archive</a>
-    <a href="../sources/">How we verify</a>
+    <a href="../upcoming/">Upcoming</a>
+    <a href="../calendar/">Calendar</a>
   </nav>
   </header>
 
@@ -121,6 +136,7 @@
   <footer class="colophon">
     <p class="concierge">Photography by Ron Delhaye Studios</p>
     <p>Every event verified against official sources before publication. Details may change — please confirm with the venue.</p>
+    <p class="foot-links"><a href="../index.html">Latest</a> · <a href="../upcoming/">Upcoming</a> · <a href="../calendar/">Calendar</a> · <a href="../editions/">Archive</a> · <a href="../sources/">How we verify</a></p>
     <p>© 2026 The Golden Hour · An Ad Astra Media publication.</p>
   </footer>
 </div>
