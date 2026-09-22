@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>This Week in Aspen</title>
+<title>The Golden Hour</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#1d1a16; --muted:#6e675c; --faint:#a39a8b; --paper:#fdfcf8;
-    --hair:#e4ded1; --brass:#8f7134;
+    --hair:#e4ded1; --accent:#103d60;
     --serif:"Cormorant Garamond","Didot","Bodoni MT",Didot,Georgia,"Times New Roman",serif;
     --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   }
@@ -20,38 +20,39 @@
        font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
   .page{max-width:44rem;margin:0 auto;padding:2.5rem 1.25rem 3rem}
   .masthead{text-align:center;margin-bottom:2.5rem}
-  .kicker{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);margin:0 0 .8rem}
+  .kicker{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 .8rem}
   .brand{font-family:var(--serif);font-weight:600;font-size:clamp(2.4rem,7vw,3.6rem);
           margin:0 0 .6rem;letter-spacing:.02em}
-  .rule-double{border:0;border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);
+  .brand-logo{display:block;margin:0 auto 1.2rem;max-width:230px;height:auto;mix-blend-mode:multiply}
+  .rule-double{border:0;border-top:1px solid var(--accent);border-bottom:1px solid var(--accent);
                 height:5px;padding:1px 0;margin:1.2rem 0}
   .tagline{color:var(--muted);font-style:italic;margin:0}
   nav.site-nav{display:flex;gap:1.4rem;justify-content:center;margin:1.6rem 0 0;
                 font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}
-  nav.site-nav a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--brass)}
+  nav.site-nav a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--accent)}
   h2.section{font-family:var(--serif);font-weight:600;font-size:1.7rem;margin:2.8rem 0 .8rem}
   .hero{border:1px solid var(--hair);padding:1.6rem 1.4rem;margin-top:1rem;background:#fff}
-  .hero .ed-range{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass)}
+  .hero .ed-range{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
   .hero h3{font-family:var(--serif);font-size:1.6rem;margin:.4rem 0 .4rem}
   .hero p{color:var(--muted);margin:.4rem 0 1rem}
-  .btn{display:inline-block;border:1px solid var(--brass);color:var(--ink);padding:.6rem 1.3rem;
+  .btn{display:inline-block;border:1px solid var(--accent);color:var(--ink);padding:.6rem 1.3rem;
         text-decoration:none;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase}
   ul.archive{list-style:none;padding:0;margin:1rem 0}
   ul.archive li{padding:.7rem 0;border-bottom:1px solid var(--hair)}
-  ul.archive a{color:var(--ink);text-decoration-color:var(--brass);text-underline-offset:3px}
+  ul.archive a{color:var(--ink);text-decoration-color:var(--accent);text-underline-offset:3px}
   ul.archive .when{display:block;font-size:.8rem;color:var(--muted)}
-  .method{border-left:2px solid var(--brass);padding:.4rem 0 .4rem 1rem;color:var(--muted);
+  .method{border-left:2px solid var(--accent);padding:.4rem 0 .4rem 1rem;color:var(--muted);
            font-style:italic;margin:1.2rem 0}
   table.src{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.92rem}
   table.src th{text-align:left;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
-                color:var(--muted);border-bottom:1px solid var(--brass);padding:.5rem .4rem}
+                color:var(--muted);border-bottom:1px solid var(--accent);padding:.5rem .4rem}
   table.src td{border-bottom:1px solid var(--hair);padding:.6rem .4rem;vertical-align:top}
-  table.src a{color:var(--ink);text-decoration-color:var(--brass);text-underline-offset:2px}
+  table.src a{color:var(--ink);text-decoration-color:var(--accent);text-underline-offset:2px}
   .rel-highest{color:#2e7d32;font-weight:600} .rel-high{color:#33691e}
   .rel-medium{color:#8f7134}
   table.desk{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.86rem}
   table.desk th{text-align:left;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
-                 color:var(--muted);border-bottom:1px solid var(--brass);padding:.5rem .35rem}
+                 color:var(--muted);border-bottom:1px solid var(--accent);padding:.5rem .35rem}
   table.desk td{border-bottom:1px solid var(--hair);padding:.55rem .35rem;vertical-align:top}
   .pill{display:inline-block;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
          border:1px solid;padding:.15rem .55rem;border-radius:2px;white-space:nowrap}
@@ -71,12 +72,13 @@
 <div class="page">
 
   <header class="masthead">
-    <p class="kicker">For our arriving members &amp; guests</p>
-    <h1 class="brand">This Week in Aspen</h1>
+    <img class="brand-logo" src="assets/brand/ron-delhaye-logo-horizontal.jpg" alt="Ron Delhaye Studios">
+    <p class="kicker">From Aspen and Beyond</p>
+    <h1 class="brand">The Golden Hour</h1>
     <hr class="rule-double">
-    <p class="tagline">A personal weekly letter on what's on in Aspen — music, art, and high-country happenings, verified before publication.</p>
+    <p class="tagline">A weekly field guide to what's on — music, art, and high-country happenings, verified before publication.</p>
   <nav class="site-nav">
-    <a href="index.html">This Week</a>
+    <a href="index.html">Latest</a>
     <a href="editions/">Archive</a>
     <a href="sources/">How we verify</a>
   </nav>
@@ -95,9 +97,9 @@
   <p class="method">Every event is checked against the venue's own page or a trusted local source before it reaches you. Aggregator listings alone never make the cut — and when two sources disagree on a time, we hold the pick until one is authoritative.</p>
   <p><a class="btn" href="sources/">See our sources</a></p>
   <footer class="colophon">
-    <p class="concierge">Your concierge — Ron Delhaye, Jr. · (970) 925-0000 · Ron.Delhaye@RitzCarlton.com</p>
+    <p class="concierge">Photography by Ron Delhaye Studios</p>
     <p>Every event verified against official sources before publication. Details may change — please confirm with the venue.</p>
-    <p>© 2026 · Prepared for the exclusive use of our arriving members and guests.</p>
+    <p>© 2026 The Golden Hour · An Ad Astra Media publication.</p>
   </footer>
 </div>
 </body>
