@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>How we verify — This Week in Aspen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1d1a16; --muted:#6e675c; --faint:#a39a8b; --paper:#fdfcf8;
+    --hair:#e4ded1; --brass:#8f7134;
+    --serif:"Cormorant Garamond","Didot","Bodoni MT",Didot,Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+       font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .page{max-width:44rem;margin:0 auto;padding:2.5rem 1.25rem 3rem}
+  .masthead{text-align:center;margin-bottom:2.5rem}
+  .kicker{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);margin:0 0 .8rem}
+  .brand{font-family:var(--serif);font-weight:600;font-size:clamp(2.4rem,7vw,3.6rem);
+          margin:0 0 .6rem;letter-spacing:.02em}
+  .rule-double{border:0;border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);
+                height:5px;padding:1px 0;margin:1.2rem 0}
+  .tagline{color:var(--muted);font-style:italic;margin:0}
+  nav.site-nav{display:flex;gap:1.4rem;justify-content:center;margin:1.6rem 0 0;
+                font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}
+  nav.site-nav a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--brass)}
+  h2.section{font-family:var(--serif);font-weight:600;font-size:1.7rem;margin:2.8rem 0 .8rem}
+  .hero{border:1px solid var(--hair);padding:1.6rem 1.4rem;margin-top:1rem;background:#fff}
+  .hero .ed-range{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass)}
+  .hero h3{font-family:var(--serif);font-size:1.6rem;margin:.4rem 0 .4rem}
+  .hero p{color:var(--muted);margin:.4rem 0 1rem}
+  .btn{display:inline-block;border:1px solid var(--brass);color:var(--ink);padding:.6rem 1.3rem;
+        text-decoration:none;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase}
+  ul.archive{list-style:none;padding:0;margin:1rem 0}
+  ul.archive li{padding:.7rem 0;border-bottom:1px solid var(--hair)}
+  ul.archive a{color:var(--ink);text-decoration-color:var(--brass);text-underline-offset:3px}
+  ul.archive .when{display:block;font-size:.8rem;color:var(--muted)}
+  .method{border-left:2px solid var(--brass);padding:.4rem 0 .4rem 1rem;color:var(--muted);
+           font-style:italic;margin:1.2rem 0}
+  table.src{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.92rem}
+  table.src th{text-align:left;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+                color:var(--muted);border-bottom:1px solid var(--brass);padding:.5rem .4rem}
+  table.src td{border-bottom:1px solid var(--hair);padding:.6rem .4rem;vertical-align:top}
+  table.src a{color:var(--ink);text-decoration-color:var(--brass);text-underline-offset:2px}
+  .rel-highest{color:#2e7d32;font-weight:600} .rel-high{color:#33691e}
+  .rel-medium{color:#8f7134}
+  table.desk{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.86rem}
+  table.desk th{text-align:left;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+                 color:var(--muted);border-bottom:1px solid var(--brass);padding:.5rem .35rem}
+  table.desk td{border-bottom:1px solid var(--hair);padding:.55rem .35rem;vertical-align:top}
+  .pill{display:inline-block;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+         border:1px solid;padding:.15rem .55rem;border-radius:2px;white-space:nowrap}
+  .st-verified-official{border-color:#2e7d32;color:#2e7d32}
+  .st-verified-secondary{border-color:#33691e;color:#33691e}
+  .st-needs-check{border-color:#8f7134;color:#8f7134}
+  .st-time-conflict{border-color:#b3261e;color:#b3261e}
+  .st-replaced{border-color:#6e675c;color:#6e675c}
+  .flag{border:1px solid var(--ink);font-size:.68rem;padding:.1rem .4rem;white-space:nowrap}
+  .colophon{margin-top:3.5rem;padding-top:1.5rem;border-top:1px solid var(--hair);
+             font-size:.8rem;color:var(--muted);text-align:center}
+  .colophon .concierge{color:var(--ink)}
+  @media print{ nav.site-nav, .btn {display:none} }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="kicker">For our arriving members &amp; guests</p>
+    <h1 class="brand">This Week in Aspen</h1>
+    <hr class="rule-double">
+    <p class="tagline">A personal weekly letter on what's on in Aspen — music, art, and high-country happenings, verified before publication.</p>
+  <nav class="site-nav">
+    <a href="../index.html">This Week</a>
+    <a href="../editions/">Archive</a>
+    <a href="../sources/">How we verify</a>
+  </nav>
+  </header>
+
+  <h2 class="section">How we verify</h2>
+  <p class="method">Each week's picks are researched against the sources below. Venue and organizer pages are ground truth. Local papers surface announcements and last-minute additions. Aggregators are a fallback — never the sole source for a published time or ticket link.</p>
+  <h2 class="section">Venue &amp; organizer pages</h2>
+  <table class="src"><tr><th>Source</th><th>Reliability</th><th>Notes</th></tr>
+    <tr><td><a href="https://bellyupaspen.com/calendar/">Belly Up Aspen — official calendar</a></td><td><span class="rel-highest">highest</span></td><td>Ground truth. Complete through Jan 2027. Per-show pages carry exact doors/show times, age policy, opener, fee-inclusive primary prices, sold-out status. &#x27;Just Announced&#x27; rail on homepage for new adds. No venue RSS found — HTML scraping viable for automation.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: first-party, as-announced</span></td></tr>
+    <tr><td><a href="https://bellyupaspen.com/">Belly Up Aspen — newsletter / SMS list</a></td><td><span class="rel-high">high</span></td><td>&#x27;Get on the List&#x27; email + phone signup in bellyupaspen.com footer (verified live). Earliest presale detection.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: fast</span></td></tr>
+    <tr><td><a href="https://www.wheeleroperahouse.com">Wheeler Opera House — official</a></td><td><span class="rel-highest">highest</span></td><td>Ground truth for Wheeler shows. Tickets via aspenshowtix.com.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: as-announced</span></td></tr>
+  </table>
+  <h2 class="section">Venue social channels</h2>
+  <table class="src"><tr><th>Source</th><th>Reliability</th><th>Notes</th></tr>
+    <tr><td><a href="https://www.facebook.com/bellyupaspen">Belly Up Aspen — Facebook</a></td><td><span class="rel-high">high</span></td><td>Near-daily posts: advance announcements with presale links plus day-of &#x27;TONIGHT&#x27; reminders. Best earliest-announcement channel (e.g. Cloonee 12/26 announced 9/8, presale 9/10).<br><span style="color:var(--faint);font-size:.8rem">Timeliness: fast</span></td></tr>
+    <tr><td><a href="https://www.instagram.com/bellyupaspen/">Belly Up Aspen — Instagram</a></td><td><span class="rel-high">high</span></td><td>Show announcements, often mirrored from Facebook. Check for late additions.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: fast</span></td></tr>
+    <tr><td><a href="https://twitter.com/bellyupaspen">Belly Up Aspen — X</a></td><td><span class="rel-medium">medium</span></td><td>Official feed from venue footer. Mirrors announcement posts.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: fast</span></td></tr>
+  </table>
+  <h2 class="section">Local news</h2>
+  <table class="src"><tr><th>Source</th><th>Reliability</th><th>Notes</th></tr>
+    <tr><td><a href="https://www.aspentimes.com/entertainment/calendar">Aspen Times — entertainment calendar</a></td><td><span class="rel-medium">medium</span></td><td>CitySpark-powered; searching &#x27;Belly Up&#x27; returns the venue&#x27;s full schedule through Dec 31, matching the official calendar. Times shown are DOOR times, not show times. Some data-quality issues (stale/duplicate entries). Good secondary discovery, not authoritative for times.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: daily</span></td></tr>
+    <tr><td><a href="https://www.aspendailynews.com/arts-and-entertainment/calendar-of-events">Aspen Daily News — calendar of events</a></td><td><span class="rel-medium">medium</span></td><td>Same CitySpark feed as the Aspen Times; same door-time caveat. Secondary local cross-check.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: daily</span></td></tr>
+  </table>
+  <h2 class="section">Regional &amp; Colorado coverage</h2>
+  <table class="src"><tr><th>Source</th><th>Reliability</th><th>Notes</th></tr>
+    <tr><td><a href="http://do303.com/venues/belly-up-aspen">do303 — Belly Up venue page</a></td><td><span class="rel-medium">medium</span></td><td>Colorado concert-announcement site, current through Dec 30. All times normalized to 7:00 PM (door time) — not reliable for show times. Mountain subsite stale; use main page only.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: weekly</span></td></tr>
+  </table>
+  <h2 class="section">Aggregators (fallback only)</h2>
+  <table class="src"><tr><th>Source</th><th>Reliability</th><th>Notes</th></tr>
+    <tr><td><a href="https://www.jambase.com/venue/belly-up-aspen">JamBase — Belly Up venue page</a></td><td><span class="rel-medium">medium</span></td><td>Current, broad coverage; per-show calendar export (GCal/iCal). Times unreliable — door time shown as event time. Fallback only; verify times against official pages.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: daily</span></td></tr>
+    <tr><td><a href="https://concerts50.com/venues/usa/aspen-co/belly-up-aspen">Concerts50 — Belly Up venue page</a></td><td><span class="rel-medium">medium</span></td><td>Only aggregator whose times matched official SHOW times. Prices shown are resale, not primary. Secondary cross-check only.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: daily</span></td></tr>
+    <tr><td><a href="">Stale sources — do not use</a></td><td><span class="rel-low">low</span></td><td>Songkick (stale ~166 days), allevents.in (incomplete), Gigsty (incomplete), mountain do303 subsite (stale), TicketWeb venue page (zero events), SeatGeek/TicketNetwork (inflated resale prices).<br><span style="color:var(--faint);font-size:.8rem">Timeliness: stale</span></td></tr>
+  </table>
+  <h2 class="section">Tourism &amp; town calendars</h2>
+  <table class="src"><tr><th>Source</th><th>Reliability</th><th>Notes</th></tr>
+    <tr><td><a href="https://www.gosnowmass.com">GoSnowmass.com</a></td><td><span class="rel-high">high</span></td><td>Official Snowmass events calendar — Balloon Festival, Oktoberfest, etc.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: weekly</span></td></tr>
+    <tr><td><a href="https://aspenchamber.org">Aspen Chamber Resort Association</a></td><td><span class="rel-high">high</span></td><td>Restaurant Week, Saturday Market, town-wide events.<br><span style="color:var(--faint);font-size:.8rem">Timeliness: weekly</span></td></tr>
+  </table>
+  <footer class="colophon">
+    <p class="concierge">Your concierge — Ron Delhaye, Jr. · (970) 925-0000 · Ron.Delhaye@RitzCarlton.com</p>
+    <p>Every event verified against official sources before publication. Details may change — please confirm with the venue.</p>
+    <p>© 2026 · Prepared for the exclusive use of our arriving members and guests.</p>
+  </footer>
+</div>
+</body>
+</html>
