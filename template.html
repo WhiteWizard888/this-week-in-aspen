@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="/this-week-in-aspen/manifest.json">
+<meta name="theme-color" content="#0a1628">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Golden Hour">
+<link rel="apple-touch-icon" href="/this-week-in-aspen/icons/apple-touch-icon.png">
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/this-week-in-aspen/sw.js", { scope: "/this-week-in-aspen/" });
+  });
+}
+</script>
+<title>The Golden Hour</title>
+<!--
+  AURELIAN — THIS WEEK IN ASPEN · design / typography template (v1)
+  ----------------------------------------------------------------
+  SAMPLE DATA throughout — placeholder content for design review only.
+  A build script will later inject real rows from a Supabase table.
+
+  INJECTION CONTRACT (keep these markers intact):
+    DAY-START … DAY-END       repeat once per day
+    PICK-START … PICK-END     repeat once per pick inside a day
+  Each .day carries data-day="sat|sun|…" and each .pick carries data-pick.
+  Field hooks: .pick-title, .when (.when-date / .when-time / .when-rel),
+  .pick-meta, .pick-syn, .pick-fit, .pick-link a,
+  .pick-photo img.
+  Image hook: <figure class="pick-photo"><img src="…" alt="…"></figure> sits
+  directly above .pick-title inside a .pick. If a row has no image, the whole
+  <figure> element is omitted — no empty hooks, no placeholder boxes.
+
+  No build step, no JavaScript. Google Fonts with system fallbacks —
+  the page must survive printing offline.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:    #1d1a16;
+    --muted:  #6e675c;
+    --faint:  #a39a8b;
+    --paper:  #fdfcf8;
+    --hair:   #e4ded1;
+    --accent:  #103d60;
+    --serif:  "Cormorant Garamond", "Didot", "Bodoni MT", Didot, Georgia, "Times New Roman", serif;
+    --sans:   "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html{ -webkit-text-size-adjust: 100%; }
+  body{
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page{
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 3rem;
+  }
+
+  /* ---------- sample banner (prints: this is placeholder content) ---------- */
+  .sample-bar{
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: .55rem .75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{ text-align: center; margin-bottom: 2.75rem; }
+  nav.site-nav{ display: flex; gap: 1.4rem; justify-content: center; margin: 0 0 1.8rem;
+                font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+  nav.site-nav a{ color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--accent); }
+  .kicker{
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 1rem;
+  }
+  .brand{
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(3.2rem, 14vw, 5.2rem);
+    letter-spacing: .14em;
+    line-height: 1;
+    margin: 0 0 .35rem;
+    text-indent: .14em; /* optically recenter tracked caps */
+  }
+  .brand-logo{
+    display: block; margin: 0 auto 1.4rem; max-width: 240px; height: auto;
+    mix-blend-mode: multiply;
+  }
+  .tagline{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.25rem, 5vw, 1.6rem);
+    color: var(--muted);
+    margin: 0;
+  }
+  .rule-double{
+    border: 0;
+    border-top: 1px solid var(--ink);
+    position: relative;
+    margin: 1.6rem auto;
+    max-width: 100%;
+  }
+  .rule-double::after{
+    content: "";
+    display: block;
+    border-top: 1px solid var(--ink);
+    margin-top: 3px;
+  }
+  .edition{
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    margin: 0 0 .9rem;
+  }
+  .edition .vol{ color: var(--faint); font-weight: 500; }
+  .editors-note{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.12rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 34rem;
+    margin: 0 auto;
+  }
+
+  /* ---------- day sections ---------- */
+  .day{ margin: 0 0 2.5rem; }
+  .day-head{
+    display: flex;
+    align-items: baseline;
+    gap: .9rem;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: .45rem;
+    margin: 0 0 1.4rem;
+  }
+  .day-name{
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+  }
+  .day-date{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--muted);
+  }
+  .day-quiet{
+    color: var(--faint);
+    font-size: .92rem;
+    font-style: italic;
+    margin: 0 0 1rem;
+  }
+
+  /* ---------- pick cards (the repeating block) ---------- */
+  .pick{
+    margin: 0 0 1.9rem;
+    padding-bottom: 1.9rem;
+    border-bottom: 1px solid var(--hair);
+  }
+  .pick:last-child{ border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+  .pick-title{
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin: 0 0 .35rem;
+  }
+  .pick-meta{
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    margin: 0 0 .7rem;
+  }
+  .pick-meta .flag{
+    display: inline-block;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: .66rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    padding: .1em .55em .15em;
+    margin-left: .6em;
+    vertical-align: .12em;
+    white-space: nowrap;
+  }
+
+  /* ---------- when-block: TIME is the important part ---------- */
+  .when{
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .2rem .9rem;
+    margin: 0 0 .55rem;
+    padding-bottom: .55rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .when-date{
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.32rem;
+    line-height: 1.2;
+    color: var(--accent);
+  }
+  .when-time{
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .when-rel{
+    margin-left: auto;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  @media print{ .when-rel{ display: none; } }
+  .pick-syn{ margin: 0 0 .55rem; }
+  .pick-fit{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.06rem;
+    color: var(--muted);
+    margin: 0 0 .7rem;
+  }
+  .pick-link{
+    font-size: .85rem;
+    margin: 0;
+  }
+  .pick-link .label{
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-size: .72rem;
+    color: var(--muted);
+  }
+  .pick-link a{
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  /* ---------- pick photo (optional; omitted entirely when absent) ---------- */
+  .pick-photo{
+    margin: 0 0 1.1rem;
+    break-inside: avoid;
+  }
+  .pick-photo img{
+    display: block;
+    width: 100%;
+    max-height: 15rem;
+    object-fit: cover;
+    border: 1px solid var(--hair);
+  }
+
+  /* ---------- closing note ---------- */
+  .closing{
+    border-top: 1px solid var(--ink);
+    margin-top: 2.5rem;
+    padding-top: 1.4rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.08rem;
+    color: var(--muted);
+  }
+
+  /* ---------- footer ---------- */
+  .colophon{
+    margin-top: 2.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--hair);
+    font-size: .78rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .colophon .concierge{ font-weight: 600; color: var(--ink); }
+  .colophon p{ margin: 0 0 .3rem; }
+
+  /* ---------- screen-only helper ---------- */
+  .screen-only{ display: block; }
+  .print-hint{
+    text-align: center;
+    font-size: .75rem;
+    color: var(--faint);
+    margin: 0 0 2rem;
+    letter-spacing: .04em;
+  }
+
+  /* ---------- wider screens: a touch more air ---------- */
+  @media (min-width: 640px){
+    .page{ padding: 3.5rem 2rem 4rem; }
+    .pick-title{ font-size: 1.7rem; }
+  }
+
+  /* ================================================================
+     PRINT — the printed page IS the newsletter.
+     ================================================================ */
+  @page{
+    size: letter;
+    margin: 17mm 15mm 18mm;
+  }
+  @media print{
+    :root{ --paper: #ffffff; }
+    body{
+      background: #fff;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page{ max-width: none; padding: 0; margin: 0; }
+    .screen-only{ display: none !important; }
+
+    .masthead{ margin-bottom: 22pt; }
+    .brand{ font-size: 44pt; }
+    .tagline{ font-size: 15pt; }
+    .sample-bar{ margin-bottom: 18pt; font-size: 7.5pt; }
+
+    .day{ margin-bottom: 18pt; }
+    .day-head{ break-after: avoid; }
+    .pick{
+      break-inside: avoid;
+      margin-bottom: 14pt;
+      padding-bottom: 14pt;
+    }
+    .pick-title{ font-size: 15pt; }
+    .pick-meta{ font-size: 8.5pt; }
+    .pick-fit{ font-size: 11pt; }
+    .pick-photo{ margin-bottom: 10pt; }
+    .pick-photo img{ max-height: 2.6in; }
+
+    a{ color: inherit; text-decoration: none; }
+    /* printed handout: the URL itself is the useful part */
+    .pick-link a::after{
+      content: " — " attr(href);
+      font-size: 8pt;
+      color: #555;
+      word-break: break-all;
+    }
+
+    .closing{ margin-top: 18pt; padding-top: 12pt; font-size: 11pt; }
+    .colophon{ margin-top: 20pt; font-size: 8pt; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <p class="print-hint screen-only">On-screen preview — this page prints as the newsletter (⌘P / Print).</p>
+
+  <div class="sample-bar">Sample edition — placeholder content for design review · not for distribution</div>
+
+  <!-- ══════════════ MASTHEAD ══════════════ -->
+  <header class="masthead">
+    <nav class="site-nav screen-only">
+      <a href="../../index.html">Latest</a>
+      <a href="../../upcoming/">Upcoming</a>
+      <a href="../../calendar/">Calendar</a>
+    </nav>
+    <p class="kicker">From Aspen and Beyond</p>
+    <h1 class="brand">The Golden Hour</h1>
+    <hr class="rule-double">
+    <p class="edition">Saturday, September 26 – Saturday, October 3, 2026 <span class="vol">· Vol. 1, No. 1</span></p>
+    <p class="editors-note">A quiet week of music, art, and high-country color — a handful of happenings worth your time, chosen for the days you're here.</p>
+  </header>
+
+  <main>
+    <!-- ══════════ DAY BLOCK · repeat per day ══════════ -->
+    <!-- DAY-START -->
+    <section class="day" data-day="sat">
+      <h2 class="day-head"><span class="day-name">Saturday</span> <span class="day-date">September 26</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <h3 class="pick-title">Aspen Saturday Market</h3>
+        <div class="when">
+          <span class="when-date">Saturday, September 26</span>
+          <span class="when-time">9:00 AM – 2:00 PM</span>
+          <span class="when-rel" data-starts="2026-09-26T09:00:00-06:00"></span>
+        </div>
+        <p class="pick-meta"><strong>Downtown Aspen</strong></p>
+        <p class="pick-syn">Local growers, bakers, and makers line the downtown streets with produce, prepared foods, and high-country crafts. Arrive before 10 for the easiest browsing and the best selection — it winds down promptly at 2.</p>
+        <p class="pick-fit"><em>A gentle first morning — daylight, low-barrier, and an easy taste of the town before you settle in.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.aspenchamber.org/">aspenchamber.org</a></p>
+      </article>
+      <!-- PICK-END -->
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <h3 class="pick-title">Saturday Night Live Music at Belly Up</h3>
+        <div class="when">
+          <span class="when-date">Saturday, September 26</span>
+          <span class="when-time">Doors 8:00 PM</span>
+          <span class="when-rel" data-starts="2026-09-26T20:00:00-06:00"></span>
+        </div>
+        <p class="pick-meta"><strong>Belly Up Aspen</strong><span class="flag">21+</span></p>
+        <p class="pick-syn">Belly Up's intimate room hosts touring acts most Saturday nights through the fall. (Sample listing — confirm the evening's performer on the venue calendar before making plans.) Tickets are typically released in advance and weekend shows can sell out.</p>
+        <p class="pick-fit"><em>For the live-music lovers — a small room with a big sound, five minutes from the Club.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://bellyupaspen.com/">bellyupaspen.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="sun">
+      <h2 class="day-head"><span class="day-name">Sunday</span> <span class="day-date">September 27</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <h3 class="pick-title">Fall Exhibitions at the Aspen Art Museum</h3>
+        <div class="when">
+          <span class="when-date">Sunday, September 27</span>
+          <span class="when-time">10:00 AM – 6:00 PM</span>
+          <span class="when-rel" data-starts="2026-09-27T10:00:00-06:00"></span>
+        </div>
+        <p class="pick-meta"><strong>Aspen Art Museum</strong></p>
+        <p class="pick-syn">The museum's fall exhibitions fill the Shigeru Ban–designed galleries, and general admission is free. (Sample listing — check the museum's current exhibitions page for what's on view during your stay.) The rooftop café makes an easy midday pause with a view over town.</p>
+        <p class="pick-fit"><em>A natural fit for art lovers — world-class contemporary work in an unhurried Sunday setting.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.aspenartmuseum.org/">aspenartmuseum.org</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="mon">
+      <h2 class="day-head"><span class="day-name">Monday</span> <span class="day-date">September 28</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <h3 class="pick-title">An Evening at the Wheeler Opera House</h3>
+        <div class="when">
+          <span class="when-date">Monday, September 28</span>
+          <span class="when-time">7:30 PM</span>
+          <span class="when-rel" data-starts="2026-09-28T19:30:00-06:00"></span>
+        </div>
+        <p class="pick-meta"><strong>Wheeler Opera House</strong></p>
+        <p class="pick-syn">The Wheeler's fall calendar runs concerts, comedy, and film most weeks in this landmark 1889 opera house. (Sample listing — the venue calendar carries the confirmed program; Monday performances are less common, so verify the date.) Few rooms in the mountains carry this kind of history.</p>
+        <p class="pick-fit"><em>For an evening with some ceremony — the room itself is half the experience.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.wheeleroperahouse.com/">wheeleroperahouse.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="tue">
+      <h2 class="day-head"><span class="day-name">Tuesday</span> <span class="day-date">September 29</span></h2>
+      <p class="day-quiet">No curated pick today — a good day for the mountains on your own terms. Ask your concierge.</p>
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="wed">
+      <h2 class="day-head"><span class="day-name">Wednesday</span> <span class="day-date">September 30</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <figure class="pick-photo"><img src="assets/sample/fall-color.jpg" alt="Golden aspen groves against the high peaks"></figure>
+        <h3 class="pick-title">Fall Color in Snowmass</h3>
+        <div class="when">
+          <span class="when-date">Wednesday, September 30</span>
+          <span class="when-time">Daytime</span>
+          <span class="when-rel" data-starts="2026-09-30T10:00:00-06:00"></span>
+        </div>
+        <p class="pick-meta"><strong>Snowmass Village</strong></p>
+        <p class="pick-syn">Late September is peak fall color in the high country. Ride the gondola for the aspen groves at their brightest, walk the village, and take lunch on a sunlit patio. (Sample listing — lift schedules shift with the season, so confirm operating days before heading over.)</p>
+        <p class="pick-fit"><em>The week's scenic centerpiece — the drive and the views alone are worth the morning.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.gosnowmass.com/">gosnowmass.com</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="thu">
+      <h2 class="day-head"><span class="day-name">Thursday</span> <span class="day-date">October 1</span></h2>
+      <p class="day-quiet">No curated pick today — a good day for the mountains on your own terms. Ask your concierge.</p>
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="fri">
+      <h2 class="day-head"><span class="day-name">Friday</span> <span class="day-date">October 2</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <h3 class="pick-title">Downtown Gallery Evening</h3>
+        <div class="when">
+          <span class="when-date">Friday, October 2</span>
+          <span class="when-time">5:00 – 8:00 PM</span>
+          <span class="when-rel" data-starts="2026-10-02T17:00:00-06:00"></span>
+        </div>
+        <p class="pick-meta"><strong>Downtown Aspen Galleries</strong></p>
+        <p class="pick-syn">Aspen's galleries keep evening hours and welcome walk-ins — an easy self-guided stroll through the core's art district to close the week. (Sample listing — a concierge can map a route to your taste, from Western to contemporary.) No tickets, no schedule, just wander.</p>
+        <p class="pick-fit"><em>A low-key farewell evening — culture at whatever pace the week has left you.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.aspenchamber.org/">aspenchamber.org</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+
+    <!-- DAY-START -->
+    <section class="day" data-day="sat2">
+      <h2 class="day-head"><span class="day-name">Saturday</span> <span class="day-date">October 3 · Departure Day</span></h2>
+
+      <!-- PICK-START -->
+      <article class="pick" data-pick>
+        <h3 class="pick-title">One Last Morning in the Mountains</h3>
+        <div class="when">
+          <span class="when-date">Saturday, October 3</span>
+          <span class="when-time">Morning</span>
+          <span class="when-rel" data-starts="2026-10-03T09:00:00-06:00"></span>
+        </div>
+        <p class="pick-meta"><strong>Your concierge can arrange</strong></p>
+        <p class="pick-syn">Checkout is at noon, but the mountains keep morning hours. (Sample listing — a sunrise drive, a final coffee on the mall, or a short walk before you head downvalley.) Your concierge can hold luggage and shape the morning around your departure time.</p>
+        <p class="pick-fit"><em>End the week the way it started — outside, unhurried.</em></p>
+        <p class="pick-link"><span class="label">Event Information:</span> <a href="https://www.aspenchamber.org/">aspenchamber.org</a></p>
+      </article>
+      <!-- PICK-END -->
+    </section>
+    <!-- DAY-END -->
+  </main>
+
+  <p class="closing">If you'd like these narrowed to your interests — music, art, the outdoors — just let me know, and I'll tailor the week to you.</p>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="colophon">
+    <p class="concierge">Photography by Ron Delhaye Studios</p>
+    <p>Every event verified against official sources before publication. Details may change — please confirm with the venue.</p>
+    <p class="screen-only"><a href="../../editions/">Archive</a> · <a href="../../sources/">How we verify</a></p>
+    <p>© 2026 The Golden Hour · An Ad Astra Media publication.</p>
+  </footer>
+
+</div>
+
+<script>
+/* Relative day labels ("Today", "Tomorrow", "In N days") — computed live so
+   static pages never go stale. Degrades silently with JS off or for print. */
+(function(){
+  var now = new Date();
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  document.querySelectorAll('[data-starts]').forEach(function(el){
+    var d = new Date(el.getAttribute('data-starts'));
+    if (isNaN(d.getTime())) return;
+    var dd = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    var diff = Math.round((dd - today) / 864e5);
+    var label = diff < 0 ? null
+      : diff === 0 ? 'Today'
+      : diff === 1 ? 'Tomorrow'
+      : 'In ' + diff + ' days';
+    if (label) el.textContent = label;
+  });
+})();
+</script>
+</body>
+</html>
